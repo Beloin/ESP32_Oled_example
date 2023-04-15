@@ -14,8 +14,14 @@ The main animation is a Snake in the display.
 The project Hardware and Software is defined in the next diagram:
 
 <div class="side">
-    <img src="./docs/Hardware_block.png" alt="Hardware Block">
-    <img src="./docs/software_block.png" alt="Software Block">
+    <div class="middle">
+        <p style="text-align: center">Harwre Block Diagram</p>
+        <img src="./docs/Hardware_block.png" alt="Hardware Block", title="Hardware Block Diagram">
+    </div>
+    <div class="middle">
+        <p style="text-align: center">Software Block Diagram</p>
+        <img src="./docs/software_block.png" alt="Software Block" title title="Software Block Diagram">
+    </div>
 </div>
 
 
@@ -26,7 +32,9 @@ The project Hardware and Software is defined in the next diagram:
     grid-template-columns: 1fr 1fr 1fr;
     column-gap: 20px;
     place-items: center;
-    background-color: white;
+}
+
+.middle {
 }
 
 .img {
