@@ -13,7 +13,7 @@ The main animation is a Snake in the display.
 
 The project Hardware and Software is defined in the next diagram:
 
-<div class="side">
+<div class="container">
     <img src="./docs/Hardware_block.png" alt="Hardware Block">
     <img src="./docs/software_block.png" alt="Software Block">
 </div>
