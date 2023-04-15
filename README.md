@@ -10,10 +10,11 @@ Based on SSD1306 Display controller chip using 6800 interface.
 
 // TODO: Explication about communication
 
-Serial communication. A cool [video](https://www.youtube.com/watch?v=IyGwvGzrqp8&ab_channel=Electronoobs) about it. OLed + SSD1306 uses I²C, so wee have this pinout 
+Serial communication. A cool [video](https://www.youtube.com/watch?v=IyGwvGzrqp8&ab_channel=Electronoobs) about it. OLed + SSD1306 uses I²C, so wee have this pinout.
 
-To communicate we will be using MCU I2C Interface:
-    - Both the data and clock signals must be connected to pull-up resistors.
+To communicate we will be using MCU I2C Interface:  
+  - Both the data and clock signals must be connected to pull-up resistors.  
+...
 
 
 The project Hardware and Software is defined in the next diagram:
