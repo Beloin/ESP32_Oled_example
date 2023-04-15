@@ -2,13 +2,18 @@
 
 In this repository we implement a simple animation in the OLed to learn more how to use I²C communication using ESP32.
 
-The main animation is a Snake in the display.
+The main animation is a Snake in the display going foward and backwards.
 
--- Explication about esp32
+// TODO: Explication about OLed
 
--- Explication about OLed
+Based on SSD1306 Display controller chip using 6800 interface.
 
--- Explication about communication
+// TODO: Explication about communication
+
+Serial communication. A cool [video](https://www.youtube.com/watch?v=IyGwvGzrqp8&ab_channel=Electronoobs) about it. OLed + SSD1306 uses I²C, so wee have this pinout 
+
+To communicate we will be using MCU I2C Interface:
+    - Both the data and clock signals must be connected to pull-up resistors.
 
 
 The project Hardware and Software is defined in the next diagram:
