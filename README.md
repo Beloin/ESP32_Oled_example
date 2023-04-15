@@ -11,7 +11,7 @@ The main animation is a Snake in the display.
 -- Explication about communication
 
 
-The project Hardware is defined in the next diagram:
+The project Hardware and Software is defined in the next diagram:
 
 <div class="side">
     <img src="./docs/Hardware_block.png" alt="Hardware Block">
@@ -22,9 +22,14 @@ The project Hardware is defined in the next diagram:
 <style>
 
 .side {
-    display: flex;
+    display: inline-block;
     grid-template-columns: 1fr 1fr 1fr;
     column-gap: 20px;
+}
+
+.img {
+    max-width: 100%;
+    max-height: 100%;
 }
 
 </style>
