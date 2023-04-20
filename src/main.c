@@ -4,9 +4,9 @@
 #include "freertos/task.h"
 #include "esp_system.h"
 
-
 // Separation of activities:
 //  1. Define the snake animation
+//      1.1 Animation will be defined as chars of 'U', 'D', 'F' and 'B'. Representing "UP", "DOWN", "FORWARDS", "BACKWARDS" respectively
 //  2. Define Snake Sprite
 //  3. Define place of animations -> For now we can get from code, but later we will get from EESP32's FLASH EEPROM
 //  4. Define how to get Snake Sprite -> For now we can get from code, but later we will get from EESP32's FLASH EEPROM
@@ -23,9 +23,16 @@
 //  9. Make animations "templates"
 //  10. Load animation templates from Flash
 
-
 // Using in-board led
 #define LED 2
+
+// TODO: Add it inside Oled + SSD1306
+typedef struct
+{
+    int const height;
+    int const weight;
+    uint8_t *arr;
+} Matrix;
 
 char status[] = {'L', 'H'};
 
@@ -44,6 +51,7 @@ void app_main()
 
         vTaskDelay(1000 / portTICK_PERIOD_MS);
         printf("Delayed... %c\n", status[!i]);
+        printf("Tested %c\n", status[!i]);
         fflush(stdout);
     }
 }

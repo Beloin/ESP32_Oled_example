@@ -1,8 +1,8 @@
 # OLed using ESP32 Example
 
-In this repository we implement a simple animation in the OLed to learn more how to use I²C communication using ESP32.
+In this repository we implement a simple animation in the OLed to learn more how to use I²C communication using ESP32. The main animation is a Snake in the display going foward, backwards, upwards and downwards.
 
-The main animation is a Snake in the display going foward and backwards.
+ - Animation will be defined as chars of 'U', 'D', 'F' and 'B'. Representing "UPWARDS", "DOWNWARDS", "FORWARDS", "BACKWARDS" respectively
 
 // TODO: Explication about OLed
 
@@ -21,8 +21,8 @@ The project Hardware and Software is defined in the next diagram:
 
 <div class="side">
     <div class="middle">
-        <p style="text-align: center">Harwre Block Diagram</p>
-        <img src="./docs/Hardware_block.png" alt="Hardware Block", title="Hardware Block Diagram">
+        <p style="text-align: center">Hardware Block Diagram</p>
+        <img src="./docs/Hardware_block.png" alt="Hardware Block" title="Hardware Block Diagram">
     </div>
     <div class="middle">
         <p style="text-align: center">Software Block Diagram</p>
