@@ -6,6 +6,7 @@
 
 #define SNAKE_SIZE 5
 #define MAX_ANIMATION_LENGTH 10
+#define ANIMATION_STEP 2
 
 uint8_t const default_snake[SNAKE_SIZE];
 uint8_t const animation_01[MAX_ANIMATION_LENGTH] =

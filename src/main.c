@@ -27,12 +27,6 @@
 #define LED 2
 
 // TODO: Add it inside Oled + SSD1306
-typedef struct
-{
-    int const height;
-    int const weight;
-    uint8_t *arr;
-} Matrix;
 
 char status[] = {'L', 'H'};
 
