@@ -2,9 +2,12 @@
 
 int index = 0;
 
-/**
- * Open a resource to use monitor using I^2c
- */
+MonitorResource const *open();
+void close(MonitorResource const *monitorResource);
+void write(const MonitorResource *const matrix);
+void ioctl_blink(const MonitorResource const *monitor, int ms);
+// void read(); // Is not implemented since we are using I^2C
+
 MonitorResource const *open()
 {
     MonitorResource *mPointer = (MonitorResource *)malloc(sizeof(MonitorResource));
@@ -41,6 +44,13 @@ void ioctl_blink(const MonitorResource const *monitor, int ms)
     {
         blink_data[size] = 1;
     }
-    
+
     // ... send blik_data to OLED.
 }
+
+const struct monitor Monitor = {
+    .open = open,
+    .close = close,
+    .write = write,
+    .ioctl_blink = ioctl_blink,
+};

@@ -8,10 +8,15 @@
 #define MAX_ANIMATION_LENGTH 10
 #define ANIMATION_STEP 2
 
-uint8_t const default_snake[SNAKE_SIZE];
+typedef struct
+{
+    int x, y;
+    uint8_t lenght;
+} Snake;
+
 uint8_t const animation_01[MAX_ANIMATION_LENGTH] =
     {'F', 'F', 'D', 'D', 'B', 'U', 'U', 'D', 'F', 'F'};
 
-void DrawAnimation01(const uint8_t  *const snake);
+void DrawAnimation01(Snake *const snake, char *animation_01, int animation_size);
 
 #endif
