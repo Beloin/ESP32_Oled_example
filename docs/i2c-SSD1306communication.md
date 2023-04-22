@@ -32,7 +32,7 @@ Sent in order to achieve communication
     - SDA: LOW -> HIGH
     - SCL: HIGH.
 
-<img src="./start_sstop_ack.png">
+<img src="./start_sstop_ack.png"/>
 
 ## Commands
 
@@ -42,3 +42,15 @@ To see full tables of commands, read Section 9 of SSD1306 datasheet.
 
 ## Data
 
+Each data byte will be sent after a `0b01000000` and a ack bit.
+
+# How Graphics Works
+
+We put data into the GDDRAM that is going to be displayed into the graphics. The size of the RAM is 128x64 bits and is divided into 8 pages.
+
+<img src="./pages.png"/>
+
+// Eu entendi isso direto?  
+When one byte of data is sent, all the rows of the same page are filled with the byte sent. With the register that has a pointer to the column. Important: Data bit D0 is written in the top row, while data bit D7 is written into bottom row.
+
+<img src="./how_image_is_written.png"/>
