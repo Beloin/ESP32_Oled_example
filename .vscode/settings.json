@@ -1,6 +1,15 @@
 {
     "files.associations": {
         "freertos.h": "c",
-        "driver.h": "c"
+        "driver.h": "c",
+        "semphr.h": "c",
+        "croutine.h": "c",
+        "queue.h": "c",
+        "freertosconfig.h": "c",
+        "esp_system.h": "c",
+        "esp_idf_version.h": "c",
+        "esp_bit_defs.h": "c",
+        "task.h": "c",
+        "gpio.h": "c"
     }
 }
