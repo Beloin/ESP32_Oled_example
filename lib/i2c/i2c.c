@@ -5,7 +5,7 @@
 #include "driver/gpio.h"
 
 SemaphoreHandle_t xSemaphore;
-
+// TODO: This should be a struct to make i2c multi-use
 uint32_t i2c_clockPin;
 uint32_t i2c_dataPin;
 uint8_t i2c_initialized = 0;
