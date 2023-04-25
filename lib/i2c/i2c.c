@@ -6,8 +6,17 @@
 
 SemaphoreHandle_t xSemaphore;
 
+uint32_t i2c_clockPin;
+uint32_t i2c_dataPin;
+uint8_t i2c_initialized = 0;
+
 uint8_t setup_i2c(uint32_t clockPin, uint32_t dataPin)
 {
+    if (i2c_initialized)
+    {
+        return I2C_ALREADY_INITIALIZED;
+    }
+
     xSemaphore = xSemaphoreCreateBinary();
     if (xSemaphore == NULL)
     {
@@ -26,8 +35,13 @@ uint8_t setup_i2c(uint32_t clockPin, uint32_t dataPin)
     i2c_initialized = 1;
 }
 
-uint8_t write_i2c(uint8_t address, uint8_t *data, int data_length, int bit_lenght)
+uint8_t write_i2c(uint8_t address, uint8_t *data, int bit_lenght)
 {
+    if (!i2c_initialized)
+    {
+        return I2C_NOT_INITIALIZED;
+    }
+
     while (!xSemaphoreTake(xSemaphore, portMAX_DELAY))
         ;
 
@@ -37,7 +51,8 @@ uint8_t write_i2c(uint8_t address, uint8_t *data, int data_length, int bit_lengh
     const TickType_t tickMs = (1 / I2C_SPEED) / portTICK_PERIOD_MS;
 
     int full_bit_size = 0;
-    for (int i = 0; i < data_length; i++)
+    int i = 0;
+    for (;;)
     {
         uint8_t value = data[i];
 
@@ -65,15 +80,24 @@ uint8_t write_i2c(uint8_t address, uint8_t *data, int data_length, int bit_lengh
         {
             break;
         }
+
+        i++;
     }
 
     // Semaphore is obligatory to give.
     while (!xSemaphoreGive(xSemaphore))
         ;
+
+    return I2C_OK;
 }
 
-uint8_t read_i2c(uint8_t address, uint8_t *data, int data_length, int bit_lenght)
+uint8_t read_i2c(uint8_t address, uint8_t *data, int bit_lenght)
 {
+    if (!i2c_initialized)
+    {
+        return I2C_NOT_INITIALIZED;
+    }
+
     while (!xSemaphoreTake(xSemaphore, portMAX_DELAY))
         ;
 
@@ -82,8 +106,10 @@ uint8_t read_i2c(uint8_t address, uint8_t *data, int data_length, int bit_lenght
 
     const TickType_t tickMs = (1 / I2C_SPEED) / portTICK_PERIOD_MS;
 
+    // TODO: There's a better way to do this... run thorugn bits and use (i/8)*(i%8) to get
     int full_bit_size = 0;
-    for (int i = 0; i < data_length; i++)
+    int i = 0;
+    for (;;)
     {
         uint8_t *value = &data[i];
         *value = 0;
@@ -115,11 +141,27 @@ uint8_t read_i2c(uint8_t address, uint8_t *data, int data_length, int bit_lenght
         {
             break;
         }
+
+        i++;
     }
 
     // Semaphore is obligatory to give.
     while (!xSemaphoreGive(xSemaphore))
         ;
+
+    return I2C_OK;
 }
 
-uint8_t close_i2c() {}
+uint8_t close_i2c()
+{
+    while (!xSemaphoreTake(xSemaphore, portMAX_DELAY))
+        ;
+
+    i2c_clockPin = 0;
+    i2c_initialized = 0;
+    i2c_dataPin = 0;
+
+    vSemaphoreDelete(xSemaphore);
+
+    return I2C_OK;
+}

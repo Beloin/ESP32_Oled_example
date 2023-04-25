@@ -10,6 +10,8 @@ Based on SSD1306 Display controller chip using 6800 interface.
 
 // TODO: Explication about communication
 
+More information about SSD1306 using I²C read <a href="https://github.com/Beloin/ESP32_Oled_example/blob/master/docs/i2c-SSD1306communication.md">here</a>.
+
 Serial communication. A cool [video](https://www.youtube.com/watch?v=IyGwvGzrqp8&ab_channel=Electronoobs) about it. OLed + SSD1306 uses I²C, so wee have this pinout.
 
 To communicate we will be using MCU I2C Interface:  
@@ -29,6 +31,8 @@ The project Hardware and Software is defined in the next diagram:
         <img src="./docs/software_block.png" alt="Software Block" title title="Software Block Diagram">
     </div>
 </div>
+
+
 
 
 <style>

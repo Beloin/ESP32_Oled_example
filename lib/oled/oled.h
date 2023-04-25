@@ -1,0 +1,15 @@
+#ifndef ESP32_OLED_OLED_H
+#define ESP32_OLED_OLED_H
+
+#define OLED_CONTRAST_CONTROL 0b10000001
+#define OLED_ADDR 0b01111000
+
+#define OLED_TURN_ON 0xAF
+#define OLED_TURN_OFF 0xAE
+
+#define OLED_RAM_DISPLAY 0xA4
+#define OLED_ALL_ON_DISPLAY 0xA5
+
+
+
+#endif
