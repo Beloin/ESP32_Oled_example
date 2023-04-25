@@ -67,7 +67,7 @@ uint8_t write_i2c(uint8_t address, uint8_t *data, int bit_lenght)
 
             gpio_set_level(i2c_clockPin, 1);
 
-            // TODO: Add delay to respect i2c speed
+            // Add delay to respect i2c speed
             vTaskDelay(tickMs);
 
             if (full_bit_size >= bit_lenght)
@@ -124,11 +124,11 @@ uint8_t read_i2c(uint8_t address, uint8_t *data, int bit_lenght)
             full_bit_size++;
 
             // TODO: This works??
-            *value = ((level << j) & 0xFF) & *value;
+            *value = (level << j) | *value;
 
             gpio_set_level(i2c_clockPin, 0);
 
-            // TODO: Add delay to respect i2c speed
+            // Add delay to respect i2c speed
             vTaskDelay(tickMs);
 
             if (full_bit_size >= bit_lenght)
