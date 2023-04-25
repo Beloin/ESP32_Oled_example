@@ -26,7 +26,7 @@ uint8_t setup_i2c(uint32_t clockPin, uint32_t dataPin)
     i2c_initialized = 1;
 }
 
-uint8_t write_i2c(uint8_t address, uint8_t *data, int byte_length, int bit_lenght)
+uint8_t write_i2c(uint8_t address, uint8_t *data, int data_length, int bit_lenght)
 {
     while (!xSemaphoreTake(xSemaphore, portMAX_DELAY))
         ;
@@ -37,7 +37,7 @@ uint8_t write_i2c(uint8_t address, uint8_t *data, int byte_length, int bit_lengh
     const TickType_t tickMs = (1 / I2C_SPEED) / portTICK_PERIOD_MS;
 
     int full_bit_size = 0;
-    for (int i = 0; i < byte_length; i++)
+    for (int i = 0; i < data_length; i++)
     {
         uint8_t value = data[i];
 
@@ -72,10 +72,54 @@ uint8_t write_i2c(uint8_t address, uint8_t *data, int byte_length, int bit_lengh
         ;
 }
 
-uint8_t read_i2c(uint8_t address, uint8_t *data, int byte_length, int bit_lenght)
+uint8_t read_i2c(uint8_t address, uint8_t *data, int data_length, int bit_lenght)
 {
+    while (!xSemaphoreTake(xSemaphore, portMAX_DELAY))
+        ;
+
     gpio_set_direction(i2c_clockPin, GPIO_MODE_DEF_OUTPUT);
     gpio_set_direction(i2c_dataPin, GPIO_MODE_DEF_INPUT);
+
+    const TickType_t tickMs = (1 / I2C_SPEED) / portTICK_PERIOD_MS;
+
+    int full_bit_size = 0;
+    for (int i = 0; i < data_length; i++)
+    {
+        uint8_t *value = &data[i];
+        *value = 0;
+
+        // Run bits
+        for (int j = 0; i < 8; j++)
+        {
+            gpio_set_level(i2c_clockPin, 0);
+            gpio_set_level(i2c_clockPin, 1);
+
+            uint8_t level = gpio_get_level(i2c_dataPin);
+            full_bit_size++;
+
+            // TODO: This works??
+            *value = ((level << j) & 0xFF) & *value;
+
+            gpio_set_level(i2c_clockPin, 0);
+
+            // TODO: Add delay to respect i2c speed
+            vTaskDelay(tickMs);
+
+            if (full_bit_size >= bit_lenght)
+            {
+                break;
+            }
+        }
+
+        if (full_bit_size >= bit_lenght)
+        {
+            break;
+        }
+    }
+
+    // Semaphore is obligatory to give.
+    while (!xSemaphoreGive(xSemaphore))
+        ;
 }
 
 uint8_t close_i2c() {}
