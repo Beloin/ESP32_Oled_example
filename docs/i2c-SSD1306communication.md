@@ -54,3 +54,21 @@ We put data into the GDDRAM that is going to be displayed into the graphics. The
 When one byte of data is sent, all the rows of the same page are filled with the byte sent. With the register that has a pointer to the column. Important: Data bit D0 is written in the top row, while data bit D7 is written into bottom row.
 
 <img src="./how_image_is_written.png"/>
+
+Can draw inside RAM using three methods:
+
+ - Page addressing mode
+ - Horizontal addressing mode
+ - Vertical addressing mode
+
+# Reset Circuit
+
+1. Display is OFF
+1. 128x64 Display mode (How to change display mode?)
+1. Normal segment and display data column address and row address mapping (SEG0 mapped to address 00h and COM0 mapped to address 00h)
+1. Display start line is set at display RAM address 0
+1. Shift register data clear in serial interface
+1. Column address counter is set at 0
+1. Normal scan direction of the COM outputs
+1. Contrast control register is set at 7Fh
+1. Normal display mode (Equivalent to A4h command)
