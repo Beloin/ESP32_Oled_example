@@ -3,10 +3,6 @@
 
 #include <stdio.h>
 
-// TODO: Put this into other area
-#define HEIGHT 32
-#define WIDTH 128
-
 typedef struct
 {
     int const height;
