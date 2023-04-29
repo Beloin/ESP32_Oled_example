@@ -19,9 +19,9 @@
 */
 uint8_t setup_i2c(uint32_t clockPin, uint32_t dataPin);
 
-uint8_t write_i2c(uint8_t address, uint8_t *data, int bit_lenght);
+uint8_t write_i2c(uint8_t *data, int bit_lenght);
 
-uint8_t read_i2c(uint8_t address, uint8_t *data, int bit_lenght);
+uint8_t read_i2c(uint8_t *data, int bit_lenght);
 
 uint8_t close_i2c();
 

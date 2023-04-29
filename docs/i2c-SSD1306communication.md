@@ -10,9 +10,6 @@ Slave Address: `0b011110X⁰X¹`, where X⁰ is any 0 or 1, and X¹ is 1 for rea
 
 Every bit is read in the **Clock UP**.
 
-// TODO: Will we have a read option?
-
-
 ## Write Mode
 
 <img src="./write_i2c.png">

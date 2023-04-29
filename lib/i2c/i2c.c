@@ -35,7 +35,7 @@ uint8_t setup_i2c(uint32_t clockPin, uint32_t dataPin)
     i2c_initialized = 1;
 }
 
-uint8_t write_i2c(uint8_t address, uint8_t *data, int bit_lenght)
+uint8_t write_i2c(uint8_t *data, int bit_lenght)
 {
     if (!i2c_initialized)
     {
@@ -57,7 +57,7 @@ uint8_t write_i2c(uint8_t address, uint8_t *data, int bit_lenght)
         uint8_t value = data[i];
 
         // Run bits
-        for (int j = 0; i < 8; j++)
+        for (int j = 0; j < 8; j++)
         {
             gpio_set_level(i2c_clockPin, 0);
 
@@ -91,7 +91,7 @@ uint8_t write_i2c(uint8_t address, uint8_t *data, int bit_lenght)
     return I2C_OK;
 }
 
-uint8_t read_i2c(uint8_t address, uint8_t *data, int bit_lenght)
+uint8_t read_i2c(uint8_t *data, int bit_lenght)
 {
     if (!i2c_initialized)
     {
@@ -115,7 +115,7 @@ uint8_t read_i2c(uint8_t address, uint8_t *data, int bit_lenght)
         *value = 0;
 
         // Run bits
-        for (int j = 0; i < 8; j++)
+        for (int j = 0; j < 8; j++)
         {
             gpio_set_level(i2c_clockPin, 0);
             gpio_set_level(i2c_clockPin, 1);

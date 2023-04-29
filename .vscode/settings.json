@@ -10,6 +10,8 @@
         "esp_idf_version.h": "c",
         "esp_bit_defs.h": "c",
         "task.h": "c",
-        "gpio.h": "c"
+        "gpio.h": "c",
+        "stdio.h": "c",
+        "i2c.h": "c"
     }
 }

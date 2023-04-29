@@ -23,8 +23,8 @@
 #define OLED_PAGE_ADDRESSING_MODE 0x22 // 0b0010_0010
 
 // This setup lower (right) nibble for the 128 column addresses
-#define OLED_LOWER_COLUMN_0_ADDRESS 0 
-// This setup hihger (left) nibble for the 128 column addresses
+#define OLED_LOWER_COLUMN_0_ADDRESS 0
+// This setup higher (left) nibble for the 128 column addresses
 #define OLED_HIGHER_COLUMN_0_ADDRESS 0x10
 
 #define OLED_HEIGHT 32
@@ -33,11 +33,17 @@
 typedef uint8_t OLedError;
 
 const OLedError OLED_OUT_OF_BOUNDS = 12;
+const OLedError OLED_I2C_ERROR = 12;
 
 // OLedError setPixel(uint8_t x, uint8_t y, uint8_t v);
+
 OLedError startDisplay(uint32_t clock_pin, uint32_t data_pin);
 
 OLedError turnOffDisplay();
+OLedError turnOnDisplay();
+
+OLedError setDisplayFullOn();
+OLedError setDisplayRAMOn();
 
 OLedError updateDisplay(uint8_t *data);
 
