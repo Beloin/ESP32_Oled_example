@@ -6,7 +6,7 @@
 void startCondition(uint32_t clock_pin, uint32_t data_pin);
 void endCondition(uint32_t clock_pin, uint32_t data_pin);
 
-OLedError writeAndReadAck(uint8_t *data, int bits);
+OLedError writeByteAndReadAck(uint8_t *data);
 OLedError setupCommand();
 OLedError setupData();
 
@@ -78,16 +78,17 @@ OLedError startDisplay(uint32_t clock_pin, uint32_t data_pin)
     return OLED_I2C_OK;
 }
 
-OLedError updateDisplay(uint32_t clock_pin, uint32_t data_pin, uint8_t *data)
+OLedError updateDisplay(uint32_t clock_pin, uint32_t data_pin, uint8_t *data) // Data is OLED_HEIGHT * OLED_WIDTH
 {
-    uint8_t err;
+    uint8_t err, value;
+    int row, index;
     startCondition(clock_pin, data_pin); // How to remove this guy from here?
 
     err = setupCommand();
     if (err)
         return err;
 
-    err = writeAndReadAck(OLED_PAGE_ADDRESSING_MODE, 8);
+    err = writeByteAndReadAck(OLED_PAGE_ADDRESSING_MODE);
     if (err)
         return err;
 
@@ -110,9 +111,22 @@ OLedError updateDisplay(uint32_t clock_pin, uint32_t data_pin, uint8_t *data)
         // Column index is auto-updated
         for (uint8_t column = 0; column < 128; column++)
         {
-            // We will need to set fisrt 8 bis of row and column
-        }
+            // We will need to set first 1 byte of row and column and read the ack
+            uint8_t byte = 0;
+            for (uint8_t bit = 0; bit < 8; bit++)
+            {
+                row = (page * 8) + bit;
+                index = row * OLED_WIDTH + column;
+                value = data[index];
+                byte = (byte << bit) | value & 0x1; // Adding value & 0x1 to force 1 or 0. Could also use value >=1
+            }
 
+            err = writeByteAndReadAck(byte);
+            if (err)
+            {
+                return err;
+            }
+        }
     }
 
     endCondition(clock_pin, data_pin);
@@ -131,7 +145,7 @@ OLedError setDisplayFullOn(uint32_t clock_pin, uint32_t data_pin)
         return err;
     }
 
-    err = writeAndReadAck(OLED_ALL_ON_DISPLAY, 8);
+    err = writeByteAndReadAck(OLED_ALL_ON_DISPLAY);
     if (err)
     {
         return err;
@@ -154,7 +168,7 @@ OLedError setDisplayRAMMode(uint32_t clock_pin, uint32_t data_pin)
         return err;
     }
 
-    err = writeAndReadAck(OLED_RAM_DISPLAY, 8);
+    err = writeByteAndReadAck(OLED_RAM_DISPLAY);
     if (err)
     {
         return err;
@@ -181,7 +195,7 @@ void endCondition(uint32_t clock_pin, uint32_t data_pin)
     gpio_set_level(data_pin, 1);
 }
 
-OLedError writeAndReadAck(uint8_t *data, int bits)
+OLedError writeByteAndReadAck(uint8_t *data)
 {
     uint8_t buffer[1], err;
 
@@ -204,14 +218,14 @@ OLedError setupCommand()
     uint8_t err;
 
     // Slave address and ack bit
-    err = writeAndReadAck(OLED_ADDR, 8);
+    err = writeByteAndReadAck(OLED_ADDR);
     if (err)
     {
         return err;
     }
 
     // Command byte
-    err = writeAndReadAck(OLED_COMMAND_BYTE, 8);
+    err = writeByteAndReadAck(OLED_COMMAND_BYTE);
     if (err)
     {
         return err;
@@ -223,14 +237,14 @@ OLedError setupData()
     uint8_t err;
 
     // Slave address and ack bit
-    err = writeAndReadAck(OLED_ADDR, 8);
+    err = writeByteAndReadAck(OLED_ADDR);
     if (err)
     {
         return err;
     }
 
     // Command byte
-    err = writeAndReadAck(OLED_DATA_BYTE, 8);
+    err = writeByteAndReadAck(OLED_DATA_BYTE);
     if (err)
     {
         return err;

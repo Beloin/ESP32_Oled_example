@@ -27,7 +27,7 @@
 // This setup higher (left) nibble for the 128 column addresses
 #define OLED_HIGHER_COLUMN_0_ADDRESS 0x10
 
-#define OLED_HEIGHT 32
+#define OLED_HEIGHT 64
 #define OLED_WIDTH 128
 
 typedef uint8_t OLedError;
