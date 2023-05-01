@@ -38,6 +38,8 @@ const OLedError OLED_I2C_OK = 0;
 
 // OLedError setPixel(uint8_t x, uint8_t y, uint8_t v);
 
+// TODO: Here we have a problem... How to mask this clock and data pins?
+
 OLedError startDisplay(uint32_t clock_pin, uint32_t data_pin);
 
 OLedError turnOffDisplay(uint32_t clock_pin, uint32_t data_pin);

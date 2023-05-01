@@ -1,7 +1,11 @@
 #include "driver.h"
 #include "oled.h"
 
-int index = 0;
+#include "freertos/FreeRTOS.h"
+#include "driver/gpio.h"
+
+#define CLOCK_PIN 4
+#define DATA_PIN 5
 
 MonitorResource const *open();
 void close(MonitorResource const *monitorResource);
@@ -11,13 +15,19 @@ void ioctl_blink(const MonitorResource const *monitor, int ms);
 
 MonitorResource const *open()
 {
+    uint8_t err;
+    if (err = startDisplay(CLOCK_PIN, DATA_PIN))
+    {
+        return err;
+    }
+
     MonitorResource *mPointer = (MonitorResource *)malloc(sizeof(MonitorResource));
     uint8_t *data = (uint8_t *)malloc(sizeof(uint8_t) * OLED_HEIGHT * OLED_WIDTH);
 
     MonitorResource toCopy = (MonitorResource){
         OLED_HEIGHT,
         OLED_WIDTH,
-        index,
+        0,
         data,
     };
 
@@ -28,26 +38,24 @@ MonitorResource const *open()
 
 void close(MonitorResource const *monitorResource)
 {
+    turnOffDisplay(CLOCK_PIN, DATA_PIN);
     free(monitorResource->data);
     free(monitorResource);
 }
 
-// TODO: Add here OLED interface usage
 void write(const MonitorResource *const matrix)
 {
+    updateDisplay(CLOCK_PIN, DATA_PIN, matrix->data);
 }
 
 void ioctl_blink(const MonitorResource const *monitor, int ms)
 {
-    // TODO: Unecessary, since we have a native blink inside OLED
-    int size = monitor->height * monitor->width;
-    uint8_t blink_data[size];
-    for (int i = 0; i < size; i++)
-    {
-        blink_data[i] = 1;
-    }
+    setDisplayFullOn(CLOCK_PIN, DATA_PIN);
 
-    // ... send blik_data to OLED.
+    const TickType_t tickMs = (ms) / portTICK_PERIOD_MS;
+    vTaskDelay(tickMs);
+
+    setDisplayRAMMode(CLOCK_PIN, DATA_PIN);
 }
 
 const struct monitor Monitor = {

@@ -6,10 +6,12 @@
 void startCondition(uint32_t clock_pin, uint32_t data_pin);
 void endCondition(uint32_t clock_pin, uint32_t data_pin);
 
+OLedError sendCommand(uint32_t clock_pin, uint32_t data_pin, uint8_t command);
 OLedError writeByteAndReadAck(uint8_t *data);
 OLedError setupCommand();
 OLedError setupData();
 
+// TODO: After testing, try to change to use functiuons declared up
 OLedError startDisplay(uint32_t clock_pin, uint32_t data_pin)
 {
     uint8_t err = setup_i2c(clock_pin, data_pin);
@@ -18,64 +20,10 @@ OLedError startDisplay(uint32_t clock_pin, uint32_t data_pin)
         return OLED_I2C_ERROR;
     }
 
-    // Start condition
     gpio_set_direction(clock_pin, GPIO_MODE_DEF_OUTPUT);
     gpio_set_direction(data_pin, GPIO_MODE_DEF_OUTPUT);
-    startCondition(clock_pin, data_pin);
 
-    uint8_t buffer[1], err;
-
-    // TODO Create a function that do both write and read ack
-
-    // Slave address and ack bit
-    err = write_i2c(OLED_ADDR, 8);
-
-    if (err)
-    {
-        return err;
-    }
-
-    read_i2c(buffer, 1);
-
-    if (!buffer[0])
-    {
-        return OLED_I2C_ERROR;
-    }
-
-    // Command byte
-    err = write_i2c(OLED_COMMAND_BYTE, 8);
-
-    if (err)
-    {
-        return err;
-    }
-
-    read_i2c(buffer, 1);
-
-    if (!buffer[0])
-    {
-        return OLED_I2C_ERROR;
-    }
-
-    // Turn monitor on
-    err = write_i2c(OLED_TURN_ON, 8);
-
-    if (err)
-    {
-        return err;
-    }
-
-    read_i2c(buffer, 1);
-
-    if (!buffer[0])
-    {
-        return OLED_I2C_ERROR;
-    }
-
-    // End condition
-    endCondition(clock_pin, data_pin);
-
-    return OLED_I2C_OK;
+    return sendCommand(clock_pin, data_pin, OLED_TURN_ON);
 }
 
 OLedError updateDisplay(uint32_t clock_pin, uint32_t data_pin, uint8_t *data) // Data is OLED_HEIGHT * OLED_WIDTH
@@ -99,7 +47,9 @@ OLedError updateDisplay(uint32_t clock_pin, uint32_t data_pin, uint8_t *data) //
     startCondition(clock_pin, data_pin);
     err = setupData();
     if (err)
+    {
         return err;
+    }
 
     // Data will be stored in GDDRAM, see SSD1306 documentation to see why is necessary to write like this.
     for (uint8_t page = 0; page < 8; page++)
@@ -118,7 +68,7 @@ OLedError updateDisplay(uint32_t clock_pin, uint32_t data_pin, uint8_t *data) //
                 row = (page * 8) + bit;
                 index = row * OLED_WIDTH + column;
                 value = data[index];
-                byte = (byte << bit) | value & 0x1; // Adding value & 0x1 to force 1 or 0. Could also use value >=1
+                byte = (byte << bit) | (value & 0x1); // Adding (value & 0x1) to force 1 or 0. Could also use value >=1
             }
 
             err = writeByteAndReadAck(byte);
@@ -136,39 +86,36 @@ OLedError updateDisplay(uint32_t clock_pin, uint32_t data_pin, uint8_t *data) //
 
 OLedError setDisplayFullOn(uint32_t clock_pin, uint32_t data_pin)
 {
-    uint8_t err;
-    startCondition(clock_pin, data_pin);
-
-    err = setupCommand();
-    if (err)
-    {
-        return err;
-    }
-
-    err = writeByteAndReadAck(OLED_ALL_ON_DISPLAY);
-    if (err)
-    {
-        return err;
-    }
-
-    endCondition(clock_pin, data_pin);
-
-    return OLED_I2C_OK;
+    return sendCommand(clock_pin, data_pin, OLED_ALL_ON_DISPLAY);
 }
 
 OLedError setDisplayRAMMode(uint32_t clock_pin, uint32_t data_pin)
 {
+    return sendCommand(clock_pin, data_pin, OLED_RAM_DISPLAY);
+}
+
+OLedError turnOffDisplay(uint32_t clock_pin, uint32_t data_pin)
+{
+    return sendCommand(clock_pin, data_pin, OLED_TURN_OFF);
+}
+
+OLedError turnOnDisplay(uint32_t clock_pin, uint32_t data_pin)
+{
+    return sendCommand(clock_pin, data_pin, OLED_TURN_ON);
+}
+
+OLedError sendCommand(uint32_t clock_pin, uint32_t data_pin, uint8_t command)
+{
     uint8_t err;
     startCondition(clock_pin, data_pin);
 
-    // Slave address and ack bit
     err = setupCommand();
     if (err)
     {
         return err;
     }
 
-    err = writeByteAndReadAck(OLED_RAM_DISPLAY);
+    err = writeByteAndReadAck(command);
     if (err)
     {
         return err;
@@ -193,24 +140,6 @@ void endCondition(uint32_t clock_pin, uint32_t data_pin)
     gpio_set_level(data_pin, 0);
     gpio_set_level(clock_pin, 1);
     gpio_set_level(data_pin, 1);
-}
-
-OLedError writeByteAndReadAck(uint8_t *data)
-{
-    uint8_t buffer[1], err;
-
-    err = write_i2c(OLED_ADDR, 8);
-    if (err)
-    {
-        return err;
-    }
-
-    err = read_i2c(buffer, 1);
-
-    if (!buffer[0] || err)
-    {
-        return OLED_I2C_ERROR;
-    }
 }
 
 OLedError setupCommand()
@@ -248,5 +177,23 @@ OLedError setupData()
     if (err)
     {
         return err;
+    }
+}
+
+OLedError writeByteAndReadAck(uint8_t *data)
+{
+    uint8_t buffer[1], err;
+
+    err = write_i2c(data, 8);
+    if (err)
+    {
+        return err;
+    }
+
+    err = read_i2c(buffer, 1);
+
+    if (!buffer[0] || err)
+    {
+        return OLED_I2C_ERROR;
     }
 }
