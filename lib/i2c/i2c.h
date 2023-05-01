@@ -17,7 +17,7 @@
 /**
  * Should be called once for application.
 */
-uint8_t setup_i2c(uint32_t clockPin, uint32_t dataPin);
+uint8_t setup_i2c(uint32_t clockPin, uint32_t data_pin);
 
 uint8_t write_i2c(uint8_t *data, int bit_lenght);
 

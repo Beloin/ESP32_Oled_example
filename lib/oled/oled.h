@@ -34,17 +34,18 @@ typedef uint8_t OLedError;
 
 const OLedError OLED_OUT_OF_BOUNDS = 12;
 const OLedError OLED_I2C_ERROR = 12;
+const OLedError OLED_I2C_OK = 0;
 
 // OLedError setPixel(uint8_t x, uint8_t y, uint8_t v);
 
 OLedError startDisplay(uint32_t clock_pin, uint32_t data_pin);
 
-OLedError turnOffDisplay();
-OLedError turnOnDisplay();
+OLedError turnOffDisplay(uint32_t clock_pin, uint32_t data_pin);
+OLedError turnOnDisplay(uint32_t clock_pin, uint32_t data_pin);
 
-OLedError setDisplayFullOn();
-OLedError setDisplayRAMOn();
+OLedError setDisplayFullOn(uint32_t clock_pin, uint32_t data_pin);
+OLedError setDisplayRAMMode(uint32_t clock_pin, uint32_t data_pin);
 
-OLedError updateDisplay(uint8_t *data);
+OLedError updateDisplay(uint32_t clock_pin, uint32_t data_pin);
 
 #endif
