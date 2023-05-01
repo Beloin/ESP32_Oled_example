@@ -46,6 +46,6 @@ OLedError turnOnDisplay(uint32_t clock_pin, uint32_t data_pin);
 OLedError setDisplayFullOn(uint32_t clock_pin, uint32_t data_pin);
 OLedError setDisplayRAMMode(uint32_t clock_pin, uint32_t data_pin);
 
-OLedError updateDisplay(uint32_t clock_pin, uint32_t data_pin);
+OLedError updateDisplay(uint32_t clock_pin, uint32_t data_pin, uint8_t *data);
 
 #endif

@@ -91,7 +91,7 @@ OLedError updateDisplay(uint32_t clock_pin, uint32_t data_pin, uint8_t *data)
     if (err)
         return err;
 
-    // TODO: Setup page and column?
+    // TODO: Setup initial page and initial column?
 
     endCondition(clock_pin, data_pin);
 
@@ -100,7 +100,20 @@ OLedError updateDisplay(uint32_t clock_pin, uint32_t data_pin, uint8_t *data)
     if (err)
         return err;
 
-    // Data will be stored in GDDRAM, see SSD1306 documentation to see why is necessary to write like this
+    // Data will be stored in GDDRAM, see SSD1306 documentation to see why is necessary to write like this.
+    for (uint8_t page = 0; page < 8; page++)
+    {
+        // Setup page
+        startCondition(clock_pin, data_pin);
+        endCondition(clock_pin, data_pin);
+
+        // Column index is auto-updated
+        for (uint8_t column = 0; column < 128; column++)
+        {
+            // We will need to set fisrt 8 bis of row and column
+        }
+
+    }
 
     endCondition(clock_pin, data_pin);
 
