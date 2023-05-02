@@ -32,9 +32,9 @@
 
 typedef uint8_t OLedError;
 
-const OLedError OLED_OUT_OF_BOUNDS = 12;
-const OLedError OLED_I2C_ERROR = 12;
-const OLedError OLED_I2C_OK = 0;
+extern const OLedError OLED_OUT_OF_BOUNDS;
+extern const OLedError OLED_I2C_ERROR;
+extern const OLedError OLED_I2C_OK;
 
 // OLedError setPixel(uint8_t x, uint8_t y, uint8_t v);
 

@@ -5,9 +5,9 @@
 
 typedef struct
 {
-    int const height;
-    int const width;
-    int const _index;
+    int height;
+    int width;
+    int _index;
     uint8_t *data; // TODO: Later try to do it with a 4096 bits instead of 32768
 } MonitorResource;
 
@@ -23,6 +23,7 @@ struct monitor
      * @param monitor The monitor resource
      */
     void (*ioctl_blink)(MonitorResource *, int);
+    void (*print)(MonitorResource *);
 };
 
 /**

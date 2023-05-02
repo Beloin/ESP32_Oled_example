@@ -2,17 +2,23 @@
 #include <oled.h>
 #include <i2c.h>
 #include "driver/gpio.h"
+#include <debug.h>
+
+const OLedError OLED_OUT_OF_BOUNDS = 12;
+const OLedError OLED_I2C_ERROR = 13;
+const OLedError OLED_I2C_OK = 0;
 
 void startCondition(uint32_t clock_pin, uint32_t data_pin);
 void endCondition(uint32_t clock_pin, uint32_t data_pin);
 
 OLedError sendCommand(uint32_t clock_pin, uint32_t data_pin, uint8_t command);
-OLedError writeByteAndReadAck(uint8_t *data);
+OLedError writeByteAndReadAck(uint8_t data);
 OLedError setupCommand();
 OLedError setupData();
 
 OLedError startDisplay(uint32_t clock_pin, uint32_t data_pin)
 {
+    debug("Starting Display...\n");
     uint8_t err = setup_i2c(clock_pin, data_pin);
     if (err)
     {
@@ -114,7 +120,7 @@ OLedError sendCommand(uint32_t clock_pin, uint32_t data_pin, uint8_t command)
         return err;
     }
 
-    err = writeByteAndReadAck(&command);
+    err = writeByteAndReadAck(command);
     if (err)
     {
         return err;
@@ -183,11 +189,11 @@ OLedError setupData()
     return OLED_I2C_OK;
 }
 
-OLedError writeByteAndReadAck(uint8_t *data)
+OLedError writeByteAndReadAck(uint8_t data)
 {
     uint8_t buffer[1], err;
 
-    err = write_i2c(data, 8);
+    err = write_i2c(&data, 8);
     if (err)
     {
         return err;

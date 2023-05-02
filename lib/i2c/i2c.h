@@ -4,7 +4,7 @@
 #include <stdio.h>
 
 // Communication defined in Khz
-#define I2C_SPEED 100
+#define I2C_SPEED 1/1000
 
 #define I2C_NOT_INITIALIZED 1
 #define I2C_NO_HEAP_SPACE 2

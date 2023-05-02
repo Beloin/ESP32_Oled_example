@@ -13,6 +13,16 @@
         "gpio.h": "c",
         "stdio.h": "c",
         "i2c.h": "c",
-        "string.h": "c"
+        "string.h": "c",
+        "bit": "c",
+        "deque": "c",
+        "map": "c",
+        "*.tcc": "c",
+        "set": "c",
+        "string": "c",
+        "unordered_map": "c",
+        "vector": "c",
+        "atomic": "c",
+        "sstream": "c"
     }
 }

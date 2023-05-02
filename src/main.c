@@ -4,6 +4,8 @@
 #include "freertos/task.h"
 #include "esp_system.h"
 
+#include "debug.h"
+
 // Separation of activities:
 //  1. Define the snake animation
 //      1.1 Animation will be defined as chars of 'U', 'D', 'F' and 'B'. Representing "UP", "DOWN", "FORWARDS", "BACKWARDS" respectively
@@ -29,10 +31,20 @@
 
 void app_main()
 {
-    const MonitorResource *resource = Monitor.open();
+    debug("Starting...\n");
+    MonitorResource *resource = Monitor.open();
 
+    if (resource == NULL) {
+        printf("Boo!\n");
+        return;
+    } else {
+        printf("Resource %d\n", (int) resource);
+    }
+
+    debug("Starting main loop\n");
     while (1)
     {
-        printf("Hello World\n");
+        Monitor.print(resource);
+        vTaskDelay(5000/portTICK_PERIOD_MS);
     }
 }

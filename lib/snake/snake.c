@@ -10,7 +10,7 @@ void backwards(Snake *const snake, MonitorResource const *resource);
 
 void DrawAnimation(Snake *const snake, char *animation, int animation_size)
 {
-    MonitorResource const *mnResource = Monitor.open();
+    MonitorResource *mnResource = Monitor.open();
 
     for (int i = 0; i < animation_size; i++)
     {

@@ -3,6 +3,7 @@
 #include "freertos/FreeRTOS.h"
 #include <freertos/semphr.h>
 #include "driver/gpio.h"
+#include <debug.h>
 
 SemaphoreHandle_t xSemaphore;
 // TODO: This should be a struct to make i2c multi-use
@@ -17,14 +18,12 @@ uint8_t setup_i2c(uint32_t clockPin, uint32_t dataPin)
         return I2C_ALREADY_INITIALIZED;
     }
 
+    debug("Setting Up i2c...\n");
     xSemaphore = xSemaphoreCreateBinary();
     if (xSemaphore == NULL)
     {
         return I2C_NO_HEAP_SPACE;
     }
-
-    // TODO: See if is necessary give first as its seen in the documentation.
-    xSemaphoreGive(xSemaphore);
 
     i2c_clockPin = clockPin;
     i2c_dataPin = dataPin;
@@ -33,6 +32,9 @@ uint8_t setup_i2c(uint32_t clockPin, uint32_t dataPin)
     esp_rom_gpio_pad_select_gpio(i2c_dataPin);
 
     i2c_initialized = 1;
+
+    // TODO: See if is necessary give first as its seen in the documentation.
+    xSemaphoreGive(xSemaphore);
 
     return I2C_OK;
 }
