@@ -12,6 +12,7 @@
         "task.h": "c",
         "gpio.h": "c",
         "stdio.h": "c",
-        "i2c.h": "c"
+        "i2c.h": "c",
+        "string.h": "c"
     }
 }

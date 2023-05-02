@@ -11,7 +11,6 @@ OLedError writeByteAndReadAck(uint8_t *data);
 OLedError setupCommand();
 OLedError setupData();
 
-// TODO: After testing, try to change to use functiuons declared up
 OLedError startDisplay(uint32_t clock_pin, uint32_t data_pin)
 {
     uint8_t err = setup_i2c(clock_pin, data_pin);
@@ -115,7 +114,7 @@ OLedError sendCommand(uint32_t clock_pin, uint32_t data_pin, uint8_t command)
         return err;
     }
 
-    err = writeByteAndReadAck(command);
+    err = writeByteAndReadAck(&command);
     if (err)
     {
         return err;
@@ -159,6 +158,8 @@ OLedError setupCommand()
     {
         return err;
     }
+
+    return OLED_I2C_OK;
 }
 
 OLedError setupData()
@@ -178,6 +179,8 @@ OLedError setupData()
     {
         return err;
     }
+
+    return OLED_I2C_OK;
 }
 
 OLedError writeByteAndReadAck(uint8_t *data)
@@ -196,4 +199,6 @@ OLedError writeByteAndReadAck(uint8_t *data)
     {
         return OLED_I2C_ERROR;
     }
+
+    return OLED_I2C_OK;
 }

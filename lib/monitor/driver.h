@@ -8,21 +8,21 @@ typedef struct
     int const height;
     int const width;
     int const _index;
-    uint8_t const *data; // TODO: Later try to do it with a 4096 bits instead of 32768
+    uint8_t *data; // TODO: Later try to do it with a 4096 bits instead of 32768
 } MonitorResource;
 
 // Following linux driver default interface OPEN, CLOSE, READ, WRITE, IOCTL;
 struct monitor
 {
-    MonitorResource const *(*open)(void);
-    void (*close)(MonitorResource const *);
-    void (*write)(const MonitorResource *const);
+    MonitorResource *(*open)(void);
+    void (*close)(MonitorResource *);
+    void (*write)(MonitorResource *);
     /**
      * Blinks the Screen.
      * @param ms Blink time
      * @param monitor The monitor resource
      */
-    void (*ioctl_blink)(const MonitorResource const *, int);
+    void (*ioctl_blink)(MonitorResource *, int);
 };
 
 /**

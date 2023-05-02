@@ -23,29 +23,16 @@
 //  9. Make animations "templates"
 //  10. Load animation templates from Flash
 
-// Using in-board led
-#define LED 2
-
 // TODO: Add it inside Oled + SSD1306
 
-char status[] = {'L', 'H'};
+#include "driver.h"
 
 void app_main()
 {
-    esp_rom_gpio_pad_select_gpio(LED);
-    gpio_set_direction(LED, GPIO_MODE_DEF_OUTPUT);
+    const MonitorResource *resource = Monitor.open();
 
-    printf("Hello World!\n");
-
-    bool i = 0;
-    for (;;)
+    while (1)
     {
-        i = i ^ 1;
-        gpio_set_level(LED, i);
-
-        vTaskDelay(1000 / portTICK_PERIOD_MS);
-        printf("Delayed... %c\n", status[!i]);
-        printf("Tested %c\n", status[!i]);
-        fflush(stdout);
+        printf("Hello World\n");
     }
 }

@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "i2c.h"
-#include <freertos/semphr.h>
 #include "freertos/FreeRTOS.h"
+#include <freertos/semphr.h>
 #include "driver/gpio.h"
 
 SemaphoreHandle_t xSemaphore;
@@ -33,10 +33,14 @@ uint8_t setup_i2c(uint32_t clockPin, uint32_t dataPin)
     esp_rom_gpio_pad_select_gpio(i2c_dataPin);
 
     i2c_initialized = 1;
+
+    return I2C_OK;
 }
 
 uint8_t write_i2c(uint8_t *data, int bit_lenght)
 {
+    const TickType_t tickMs = (1 / I2C_SPEED) / portTICK_PERIOD_MS;
+
     if (!i2c_initialized)
     {
         return I2C_NOT_INITIALIZED;
@@ -47,8 +51,6 @@ uint8_t write_i2c(uint8_t *data, int bit_lenght)
 
     gpio_set_direction(i2c_clockPin, GPIO_MODE_DEF_OUTPUT);
     gpio_set_direction(i2c_dataPin, GPIO_MODE_DEF_OUTPUT);
-
-    const TickType_t tickMs = (1 / I2C_SPEED) / portTICK_PERIOD_MS;
 
     int full_bit_size = 0;
     int i = 0;
@@ -93,6 +95,8 @@ uint8_t write_i2c(uint8_t *data, int bit_lenght)
 
 uint8_t read_i2c(uint8_t *data, int bit_lenght)
 {
+    const TickType_t tickMs = (1 / I2C_SPEED) / portTICK_PERIOD_MS;
+   
     if (!i2c_initialized)
     {
         return I2C_NOT_INITIALIZED;
@@ -103,8 +107,6 @@ uint8_t read_i2c(uint8_t *data, int bit_lenght)
 
     gpio_set_direction(i2c_clockPin, GPIO_MODE_DEF_OUTPUT);
     gpio_set_direction(i2c_dataPin, GPIO_MODE_DEF_INPUT);
-
-    const TickType_t tickMs = (1 / I2C_SPEED) / portTICK_PERIOD_MS;
 
     // TODO: There's a better way to do this... run thorugn bits and use (i/8)*(i%8) to get
     int full_bit_size = 0;

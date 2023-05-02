@@ -1,24 +1,26 @@
 #include "driver.h"
 #include "oled.h"
 
+#include <string.h>
 #include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
 #include "driver/gpio.h"
 
-#define CLOCK_PIN 4
-#define DATA_PIN 5
+#define CLOCK_PIN 13
+#define DATA_PIN 4
 
-MonitorResource const *open();
-void close(MonitorResource const *monitorResource);
-void write(const MonitorResource *const matrix);
-void ioctl_blink(const MonitorResource const *monitor, int ms);
+MonitorResource *open();
+void close(MonitorResource *monitorResource);
+void write(MonitorResource *matrix);
+void ioctl_blink(MonitorResource *monitor, int ms);
 // void read(); // Is not implemented since we are using I^2C
 
-MonitorResource const *open()
+MonitorResource *open()
 {
     uint8_t err;
-    if (err = startDisplay(CLOCK_PIN, DATA_PIN))
+    if ((err = startDisplay(CLOCK_PIN, DATA_PIN)))
     {
-        return err;
+        return NULL;
     }
 
     MonitorResource *mPointer = (MonitorResource *)malloc(sizeof(MonitorResource));
@@ -36,19 +38,19 @@ MonitorResource const *open()
     return mPointer;
 }
 
-void close(MonitorResource const *monitorResource)
+void close(MonitorResource *monitorResource)
 {
     turnOffDisplay(CLOCK_PIN, DATA_PIN);
     free(monitorResource->data);
     free(monitorResource);
 }
 
-void write(const MonitorResource *const matrix)
+void write(MonitorResource *matrix)
 {
     updateDisplay(CLOCK_PIN, DATA_PIN, matrix->data);
 }
 
-void ioctl_blink(const MonitorResource const *monitor, int ms)
+void ioctl_blink(MonitorResource *monitor, int ms)
 {
     setDisplayFullOn(CLOCK_PIN, DATA_PIN);
 
