@@ -4,7 +4,7 @@
 #include <stdio.h>
 
 // Communication defined in Khz
-#define I2C_SPEED 1/1000
+#define I2C_SPEED (double) 1 / (double) 100
 
 #define I2C_NOT_INITIALIZED 1
 #define I2C_NO_HEAP_SPACE 2
@@ -24,5 +24,7 @@ uint8_t write_i2c(uint8_t *data, int bit_lenght);
 uint8_t read_i2c(uint8_t *data, int bit_lenght);
 
 uint8_t close_i2c();
+
+void i2c_timer();
 
 #endif

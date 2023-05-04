@@ -30,24 +30,24 @@
 #define OLED_HEIGHT 64
 #define OLED_WIDTH 128
 
-typedef uint8_t OLedError;
+typedef uint8_t OLedStatus;
 
-extern const OLedError OLED_OUT_OF_BOUNDS;
-extern const OLedError OLED_I2C_ERROR;
-extern const OLedError OLED_I2C_OK;
+extern const OLedStatus OLED_OUT_OF_BOUNDS;
+extern const OLedStatus OLED_I2C_ERROR;
+extern const OLedStatus OLED_I2C_OK;
 
 // OLedError setPixel(uint8_t x, uint8_t y, uint8_t v);
 
 // TODO: Here we have a problem... How to mask this clock and data pins?
 
-OLedError startDisplay(uint32_t clock_pin, uint32_t data_pin);
+OLedStatus startDisplay(uint32_t clock_pin, uint32_t data_pin);
 
-OLedError turnOffDisplay(uint32_t clock_pin, uint32_t data_pin);
-OLedError turnOnDisplay(uint32_t clock_pin, uint32_t data_pin);
+OLedStatus turnOffDisplay(uint32_t clock_pin, uint32_t data_pin);
+OLedStatus turnOnDisplay(uint32_t clock_pin, uint32_t data_pin);
 
-OLedError setDisplayFullOn(uint32_t clock_pin, uint32_t data_pin);
-OLedError setDisplayRAMMode(uint32_t clock_pin, uint32_t data_pin);
+OLedStatus setDisplayFullOn(uint32_t clock_pin, uint32_t data_pin);
+OLedStatus setDisplayRAMMode(uint32_t clock_pin, uint32_t data_pin);
 
-OLedError updateDisplay(uint32_t clock_pin, uint32_t data_pin, uint8_t *data);
+OLedStatus updateDisplay(uint32_t clock_pin, uint32_t data_pin, uint8_t *data);
 
 #endif

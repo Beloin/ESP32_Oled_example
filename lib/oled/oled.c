@@ -4,19 +4,19 @@
 #include "driver/gpio.h"
 #include <debug.h>
 
-const OLedError OLED_OUT_OF_BOUNDS = 12;
-const OLedError OLED_I2C_ERROR = 13;
-const OLedError OLED_I2C_OK = 0;
+const OLedStatus OLED_OUT_OF_BOUNDS = 12;
+const OLedStatus OLED_I2C_ERROR = 13;
+const OLedStatus OLED_I2C_OK = 0;
 
 void startCondition(uint32_t clock_pin, uint32_t data_pin);
 void endCondition(uint32_t clock_pin, uint32_t data_pin);
 
-OLedError sendCommand(uint32_t clock_pin, uint32_t data_pin, uint8_t command);
-OLedError writeByteAndReadAck(uint8_t data);
-OLedError setupCommand();
-OLedError setupData();
+OLedStatus sendCommand(uint32_t clock_pin, uint32_t data_pin, uint8_t command);
+OLedStatus writeByteAndReadAck(uint8_t data);
+OLedStatus setupCommand();
+OLedStatus setupData();
 
-OLedError startDisplay(uint32_t clock_pin, uint32_t data_pin)
+OLedStatus startDisplay(uint32_t clock_pin, uint32_t data_pin)
 {
     debug("Starting Display...\n");
     uint8_t err = setup_i2c(clock_pin, data_pin);
@@ -25,13 +25,10 @@ OLedError startDisplay(uint32_t clock_pin, uint32_t data_pin)
         return OLED_I2C_ERROR;
     }
 
-    gpio_set_direction(clock_pin, GPIO_MODE_DEF_OUTPUT);
-    gpio_set_direction(data_pin, GPIO_MODE_DEF_OUTPUT);
-
     return sendCommand(clock_pin, data_pin, OLED_TURN_ON);
 }
 
-OLedError updateDisplay(uint32_t clock_pin, uint32_t data_pin, uint8_t *data) // Data is OLED_HEIGHT * OLED_WIDTH
+OLedStatus updateDisplay(uint32_t clock_pin, uint32_t data_pin, uint8_t *data) // Data is OLED_HEIGHT * OLED_WIDTH
 {
     uint8_t err, value;
     int row, index;
@@ -89,28 +86,29 @@ OLedError updateDisplay(uint32_t clock_pin, uint32_t data_pin, uint8_t *data) //
     return OLED_I2C_OK;
 }
 
-OLedError setDisplayFullOn(uint32_t clock_pin, uint32_t data_pin)
+OLedStatus setDisplayFullOn(uint32_t clock_pin, uint32_t data_pin)
 {
     return sendCommand(clock_pin, data_pin, OLED_ALL_ON_DISPLAY);
 }
 
-OLedError setDisplayRAMMode(uint32_t clock_pin, uint32_t data_pin)
+OLedStatus setDisplayRAMMode(uint32_t clock_pin, uint32_t data_pin)
 {
     return sendCommand(clock_pin, data_pin, OLED_RAM_DISPLAY);
 }
 
-OLedError turnOffDisplay(uint32_t clock_pin, uint32_t data_pin)
+OLedStatus turnOffDisplay(uint32_t clock_pin, uint32_t data_pin)
 {
     return sendCommand(clock_pin, data_pin, OLED_TURN_OFF);
 }
 
-OLedError turnOnDisplay(uint32_t clock_pin, uint32_t data_pin)
+OLedStatus turnOnDisplay(uint32_t clock_pin, uint32_t data_pin)
 {
     return sendCommand(clock_pin, data_pin, OLED_TURN_ON);
 }
 
-OLedError sendCommand(uint32_t clock_pin, uint32_t data_pin, uint8_t command)
+OLedStatus sendCommand(uint32_t clock_pin, uint32_t data_pin, uint8_t command)
 {
+    debug("Sending Command to OLED\n");
     uint8_t err;
     startCondition(clock_pin, data_pin);
 
@@ -133,21 +131,37 @@ OLedError sendCommand(uint32_t clock_pin, uint32_t data_pin, uint8_t command)
 
 void startCondition(uint32_t clock_pin, uint32_t data_pin)
 {
+    // TODO: Start condition shoul wait too
+    
     // Data pin shound be used with a Pullup resistor
+    gpio_set_direction(clock_pin, GPIO_MODE_DEF_OUTPUT);
+    gpio_set_direction(data_pin, GPIO_MODE_DEF_OUTPUT);
+
     gpio_set_level(data_pin, 1);
+    i2c_timer();
     gpio_set_level(clock_pin, 1);
+    i2c_timer();
     gpio_set_level(data_pin, 0);
+    i2c_timer();
 }
 
 void endCondition(uint32_t clock_pin, uint32_t data_pin)
 {
+    // TODO: end condition shoul wait too
+
+    gpio_set_direction(clock_pin, GPIO_MODE_DEF_OUTPUT);
+    gpio_set_direction(data_pin, GPIO_MODE_DEF_OUTPUT);
+
     // Data pin shound be used with a Pullup resistor
     gpio_set_level(data_pin, 0);
+    i2c_timer();
     gpio_set_level(clock_pin, 1);
+    i2c_timer();
     gpio_set_level(data_pin, 1);
+    i2c_timer();
 }
 
-OLedError setupCommand()
+OLedStatus setupCommand()
 {
     uint8_t err;
 
@@ -168,7 +182,7 @@ OLedError setupCommand()
     return OLED_I2C_OK;
 }
 
-OLedError setupData()
+OLedStatus setupData()
 {
     uint8_t err;
 
@@ -189,7 +203,7 @@ OLedError setupData()
     return OLED_I2C_OK;
 }
 
-OLedError writeByteAndReadAck(uint8_t data)
+OLedStatus writeByteAndReadAck(uint8_t data)
 {
     uint8_t buffer[1], err;
 
@@ -201,10 +215,11 @@ OLedError writeByteAndReadAck(uint8_t data)
 
     err = read_i2c(buffer, 1);
 
-    if (!buffer[0] || err)
-    {
-        return OLED_I2C_ERROR;
-    }
+    // TODO: Re-enable this
+    // if (!buffer[0] || err)
+    // {
+    //     return OLED_I2C_ERROR;
+    // }
 
     return OLED_I2C_OK;
 }

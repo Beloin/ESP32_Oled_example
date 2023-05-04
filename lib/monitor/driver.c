@@ -23,12 +23,12 @@ MonitorResource *openMonitor()
     debug("Open Called...\n");
 
     // TODO: Continue from here
-    // uint8_t err;
+    uint8_t err;
 
-    // if ((err = startDisplay(CLOCK_PIN, DATA_PIN)))
-    // {
-    //     return NULL;
-    // }
+    if ((err = startDisplay(CLOCK_PIN, DATA_PIN)))
+    {
+        return NULL;
+    }
 
     debug("Display Started...\n");
 

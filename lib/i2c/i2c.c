@@ -41,8 +41,6 @@ uint8_t setup_i2c(uint32_t clockPin, uint32_t dataPin)
 
 uint8_t write_i2c(uint8_t *data, int bit_lenght)
 {
-    const TickType_t tickMs = (1 / I2C_SPEED) / portTICK_PERIOD_MS;
-
     if (!i2c_initialized)
     {
         return I2C_NOT_INITIALIZED;
@@ -72,7 +70,7 @@ uint8_t write_i2c(uint8_t *data, int bit_lenght)
             gpio_set_level(i2c_clockPin, 1);
 
             // Add delay to respect i2c speed
-            vTaskDelay(tickMs);
+            i2c_timer();
 
             if (full_bit_size >= bit_lenght)
             {
@@ -97,8 +95,6 @@ uint8_t write_i2c(uint8_t *data, int bit_lenght)
 
 uint8_t read_i2c(uint8_t *data, int bit_lenght)
 {
-    const TickType_t tickMs = (1 / I2C_SPEED) / portTICK_PERIOD_MS;
-   
     if (!i2c_initialized)
     {
         return I2C_NOT_INITIALIZED;
@@ -133,7 +129,7 @@ uint8_t read_i2c(uint8_t *data, int bit_lenght)
             gpio_set_level(i2c_clockPin, 0);
 
             // Add delay to respect i2c speed
-            vTaskDelay(tickMs);
+            i2c_timer();
 
             if (full_bit_size >= bit_lenght)
             {
@@ -168,4 +164,10 @@ uint8_t close_i2c()
     vSemaphoreDelete(xSemaphore);
 
     return I2C_OK;
+}
+
+void i2c_timer()
+{
+    const TickType_t tickMs = (1 / I2C_SPEED) / portTICK_PERIOD_MS;
+    vTaskDelay(tickMs);
 }

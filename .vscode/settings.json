@@ -23,6 +23,7 @@
         "unordered_map": "c",
         "vector": "c",
         "atomic": "c",
-        "sstream": "c"
+        "sstream": "c",
+        "esp_wifi.h": "c"
     }
 }
