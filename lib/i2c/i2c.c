@@ -66,6 +66,7 @@ uint8_t write_i2c(uint8_t *data, int bit_lenght)
             uint8_t pin_value = (value >> j) & 0x1; // Masks all other bits but least significant bit
             gpio_set_level(i2c_dataPin, pin_value);
             full_bit_size++;
+            i2c_timer();
 
             gpio_set_level(i2c_clockPin, 1);
 
@@ -118,6 +119,7 @@ uint8_t read_i2c(uint8_t *data, int bit_lenght)
         for (int j = 0; j < 8; j++)
         {
             gpio_set_level(i2c_clockPin, 0);
+            i2c_timer();
             gpio_set_level(i2c_clockPin, 1);
 
             uint8_t level = gpio_get_level(i2c_dataPin);
@@ -126,10 +128,10 @@ uint8_t read_i2c(uint8_t *data, int bit_lenght)
             // TODO: This works??
             *value = (level << j) | *value;
 
+            i2c_timer();
             gpio_set_level(i2c_clockPin, 0);
 
             // Add delay to respect i2c speed
-            i2c_timer();
 
             if (full_bit_size >= bit_lenght)
             {

@@ -138,7 +138,6 @@ void startCondition(uint32_t clock_pin, uint32_t data_pin)
     gpio_set_direction(data_pin, GPIO_MODE_DEF_OUTPUT);
 
     gpio_set_level(data_pin, 1);
-    i2c_timer();
     gpio_set_level(clock_pin, 1);
     i2c_timer();
     gpio_set_level(data_pin, 0);
@@ -154,7 +153,6 @@ void endCondition(uint32_t clock_pin, uint32_t data_pin)
 
     // Data pin shound be used with a Pullup resistor
     gpio_set_level(data_pin, 0);
-    i2c_timer();
     gpio_set_level(clock_pin, 1);
     i2c_timer();
     gpio_set_level(data_pin, 1);
